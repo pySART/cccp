@@ -5,20 +5,19 @@ from ctypes import create_string_buffer
 import unittest
 
 from common import  BaseTest
-#from msg import Messaging
 from ccp_wrapper import Ccp
 
-class TestUtlStringFunctions(BaseTest):
+class TestCcp(BaseTest):
 
     CLASS =  Ccp
     DLL = "ccp"
 
+    def setUp(self):
+        super(TestCcp, self).setUp()
+        self.obj.init()
+
     def testConnect(self):
         pass
-#        dest = create_string_buffer(120)
-#        src = create_string_buffer(b"")
-#        self.obj.utl.strCpy(dest, src)
-#        self.assertEqual(dest.value, "")
 
 
 def main():

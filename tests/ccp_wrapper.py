@@ -28,6 +28,7 @@ class Ccp(FFI):
         ("Ccp_GetConnectionState", c_uint16, []),
         ("Ccp_DispatchCommand", POINTER(Ccp_MessageObjectType), []),
         ("Ccp_Init", None, []),
+        ("Ccp_GetMta", c_uint32, []),
     )
 
     def init(self):
@@ -36,6 +37,17 @@ class Ccp(FFI):
     def deinit(self):
         pass
 
+    def getConnectionState(self):
+        return self.Ccp_GetConnectionState
+
+    def getMta(self):
+        return self.Ccp_GetMta()
+
     def dispatchCommand(self, command):
         self.Ccp_DispatchCommand(byref(command))
 
+
+class LocalTransport(object):
+    pass
+
+# Skip MacOSX tests for now.
