@@ -11,12 +11,12 @@ script:
   #- cd ./python
   # - sudo python setup.py install
   # - sudo pip install -v  
-  -  pip install -v https://github.com/pySART/pyccp/archive/master.tar.gz
+  - sudo pip install https://github.com/pySART/pyccp/archive/master.tar.gz
   - cd ..
   - cd tests
   - make
   #- sudo pip install enum
-  - sudo pip install -r requirements.txt
+  #- sudo pip install -r requirements.txt
   #- ls -lA
   - python -m unittest discover -v
 
