@@ -5,7 +5,13 @@ from ctypes import create_string_buffer
 import unittest
 
 from common import  BaseTest
-from ccp_wrapper import Ccp
+from ccp_wrapper import Ccp, LocalTransport
+
+from pyccp import ccp
+from pyccp.master import Master
+
+def sender(cmo):
+    print("CMO: {0}".format(cmo))
 
 class TestCcp(BaseTest):
 
@@ -14,10 +20,24 @@ class TestCcp(BaseTest):
 
     def setUp(self):
         super(TestCcp, self).setUp()
-        self.obj.init()
+        transport = LocalTransport()
+        self.master = Master(transport)
+
+    def runTest(self, func, *params):
+        getattr(self.master, func)(*params)
+        #result = str(self.master.transport.message)
+        #self.assertEqual(result, expectedResult)
 
     def testConnect(self):
-        pass
+        self.runTest("connect", 0x7E1, 0x39)
+
+    def testInitWorksAsExpected(self):
+        self.obj.init()
+        self.assertEqual(self.obj.getMta(), 0)
+        self.assertEqual(self.obj.getConnectionState(), 0)
+
+    def testCallout(self):
+        self.obj.setSendCallout(sender)
 
 
 def main():
