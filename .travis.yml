@@ -13,12 +13,13 @@ script:
   # - sudo pip install -v  
   - sudo pip install https://github.com/pySART/pyccp/archive/master.tar.gz
   - cd ..
-  - cd tests
+  - ls
+  - cd ./tests
   - make
   #- sudo pip install enum
   #- sudo pip install -r requirements.txt
   #- ls -lA
-  - python -c "import pyccp; print(dir(pyccp))"
+  #- python -c "import pyccp; print(dir(pyccp))"
   - python -m unittest discover -v
 
 os:
