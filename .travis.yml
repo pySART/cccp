@@ -10,7 +10,8 @@ script:
   #- ls python -lRA
   #- cd ./python
   # - sudo python setup.py install
-    - sudo pip install -v  
+  # - sudo pip install -v  
+  -  pip install -v https://github.com/pySART/pyccp/archive/master.tar.gz
   - cd ..
   - cd tests
   - make
