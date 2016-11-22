@@ -11,9 +11,8 @@ script:
   #- cd ./python
   # - sudo python setup.py install
   # - sudo pip install -v  
-  - sudo pip install https://github.com/pySART/pyccp/archive/master.tar.gz
+  - sudo -H pip install https://github.com/pySART/pyccp/archive/master.tar.gz
   #- cd ..
-  - ls
   - cd ./tests
   - make
   #- sudo pip install enum
