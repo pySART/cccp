@@ -26,6 +26,7 @@
 #if !defined(__CCCP_H)
 #define __CCCP_H
 
+#include <stdlib.h>
 #include <stdint.h>
 
 #define CCP_VERSION_MAJOR       (2)
@@ -40,6 +41,7 @@
 /*
 ** Global Types.
 */
+
 typedef enum tagCcp_CommandType {
 
     /* Mandatory Commands. */
@@ -102,7 +104,7 @@ typedef enum tagCcp_DTOType {
 
 typedef enum tagCcp_ConnectionStateType {
     CCP_DISCONNECTED = 0,
-    CCP_CONNECTED = 0
+    CCP_CONNECTED = 1
 } Ccp_ConnectionStateType;
 
 
@@ -124,14 +126,19 @@ typedef struct tagCcp_StationIDType {
 } Ccp_StationIDType;
 
 
+typedef void(*Ccp_SendCalloutType)(Ccp_MessageObjectType const * cmoOut);
+
 /*
 ** Global Functions.
 */
 void Ccp_Init(void);
 void Ccp_DispatchCommand(Ccp_MessageObjectType const * cmoIn);
+void Ccp_SendCmo(Ccp_MessageObjectType const * cmoOut);
+
 
 Ccp_ConnectionStateType Ccp_GetConnectionState(void);
 uint32_t Ccp_GetMta(void);
+void Ccp_SetSendCallout(Ccp_SendCalloutType * callout);
 
 #include "ccp_config.h"
 

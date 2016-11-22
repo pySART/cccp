@@ -27,10 +27,10 @@
 
 static Ccp_ConnectionStateType Ccp_ConnectionState = CCP_DISCONNECTED;
 static uint32_t Ccp_Mta;    /* Memory transfer address. */
-
-
 static const Ccp_StationIDType Ccp_StationID = { sizeof(CCP_STATION_ID), CCP_STATION_ID };
+static Ccp_SendCalloutType * Ccp_SendCallout = NULL;
 
+#define CCP_COMMAND     (cmoIn->data[0])
 
 void Ccp_Init(void)
 {
@@ -38,12 +38,24 @@ void Ccp_Init(void)
     Ccp_Mta = 0x00000000UL;
 }
 
+
+/**
+ * Entry point, needs to be "wired" to CAN-Rx interrupt.
+ *
+ * @param cmoIn
+ */
 void Ccp_DispatchCommand(Ccp_MessageObjectType const * cmoIn)
 {
-    /* Handle un-connected commands. */
-
     if (Ccp_ConnectionState == CCP_CONNECTED) {
 
+    } else {
+        /*
+        ** Handle unconnected commands.
+        */
+        if (CCP_COMMAND == CONNECT) {
+
+            /* Duplicate connects don't hurt us. */
+        }
     }
     /*
     // Mandatory Commands.
@@ -59,6 +71,25 @@ void Ccp_DispatchCommand(Ccp_MessageObjectType const * cmoIn)
     START_STOP          = 0x06,
     DISCONNECT          = 0x07
     */
+}
+
+
+void Ccp_SendCmo(Ccp_MessageObjectType const * cmoOut)
+{
+    /*
+    **
+    ** Note: A callout is only needed for unit-testing.
+    ** TODO: Conditional compilation (testing vs. "real-world").
+    **
+    */
+    if (Ccp_SendCallout) {
+        (*Ccp_SendCallout)(cmoOut);
+    }
+}
+
+void Ccp_SetSendCallout(Ccp_SendCalloutType * callout)
+{
+    Ccp_SendCallout = callout;
 }
 
 
@@ -78,5 +109,4 @@ uint32_t Ccp_GetMta(void)
 {
     return Ccp_Mta;
 }
-
 
