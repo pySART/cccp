@@ -2,7 +2,7 @@
 #include "ccp.h"
 
 
-static CCP_StateType CCP_State = CCP_DISCONNECTED;
+static CCP_ConnectionStateType CCP_ConnectionState = CCP_DISCONNECTED;
 static uint32_t CCP_Mta;    /* Memory transfer address. */
 
 
@@ -11,7 +11,7 @@ static const CCP_StationIDType CCP_StationID = { sizeof(CCP_STATION_ID), CCP_STA
 
 void CCP_Init(void)
 {
-    CCP_State = CCP_DISCONNECTED;
+    CCP_ConnectionState = CCP_DISCONNECTED;
     CCP_Mta = 0x00000000UL;
 }
 
@@ -20,7 +20,7 @@ void CCP_dispatchCommand(CCP_MessageObjectType const * cmoIn)
 {
     /* Handle un-connected commands. */
 
-    if (CCP_State == CCP_CONNECTED) {
+    if (CCP_ConnectionState == CCP_CONNECTED) {
 
     }
     /*

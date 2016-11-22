@@ -73,10 +73,17 @@ typedef enum tagCCP_DTOType {
     COMMAND_RETURN_MESSAGE  = 255
 } CCP_DTOType;
 
-typedef enum tagCCP_StateType { /* ConnectionState */
+typedef enum tagCCP_ConnectionStateType { /* ConnectionState */
     CCP_DISCONNECTED = 0,
     CCP_CONNECTED = 0
-} CCP_StateType;
+} CCP_ConnectionStateType;
+
+
+typedef enum {
+    PGM = 0x40,
+    DAQ = 0x02,
+    CAL = 0x01
+};
 
 
 typedef struct tagCCP_MessageObjectType {
