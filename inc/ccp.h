@@ -1,4 +1,27 @@
-
+/*
+ * pySART - Simplified AUTOSAR-Toolkit for Python.
+ *
+ * (C) 2007-2016 by Christoph Schueler <github.com/Christoph2,
+ *                                      cpu12.gems@googlemail.com>
+ *
+ * All Rights Reserved
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * s. FLOSS-EXCEPTION.txt
+ */
 
 #if !defined(__CCCP_H)
 #define __CCCP_H
@@ -13,7 +36,11 @@
 #define CCP_DEBUG_BUILD         (1)
 #define CCP_RELEASE_BUILD       (2)
 
-typedef enum tagCCP_CommandType {
+
+/*
+** Global Types.
+*/
+typedef enum tagCcp_CommandType {
 
     /* Mandatory Commands. */
     CONNECT             = 0x01,
@@ -45,9 +72,9 @@ typedef enum tagCCP_CommandType {
     START_STOP_ALL      = 0x08,
     DIAG_SERVICE        = 0x20,
     ACTION_SERVICE      = 0x21
-} CCP_CommandType;
+} Ccp_CommandType;
 
-typedef enum tagCCP_ReturnType {
+typedef enum tagCcp_ReturnType {
     ACKNOWLEDGE                     = 0x00,
     DAQ_PROCESSOR_OVERLOAD          = 0x01,
     COMMAND_PROCESSOR_BUSY          = 0x10,
@@ -66,17 +93,17 @@ typedef enum tagCCP_ReturnType {
     OVERLOAD                        = 0x34,
     ACCESS_LOCKED                   = 0x35,
     RESOURCE_FUNCTION_NOT_AVAILABLE = 0x36
-} CCP_ReturnType;
+} Ccp_ReturnType;
 
-typedef enum tagCCP_DTOType {
+typedef enum tagCcp_DTOType {
     EVENT_MESSAGE           = 254,
     COMMAND_RETURN_MESSAGE  = 255
-} CCP_DTOType;
+} Ccp_DTOType;
 
-typedef enum tagCCP_ConnectionStateType { /* ConnectionState */
+typedef enum tagCcp_ConnectionStateType { /* ConnectionState */
     CCP_DISCONNECTED = 0,
     CCP_CONNECTED = 0
-} CCP_ConnectionStateType;
+} Ccp_ConnectionStateType;
 
 
 typedef enum {
@@ -85,17 +112,25 @@ typedef enum {
     CAL = 0x01
 };
 
-
-typedef struct tagCCP_MessageObjectType {
+typedef struct tagCcp_MessageObjectType {
     uint32_t canID;
     uint8_t dlc;
     uint8_t data[CCP_LSDU_LEN];
-} CCP_MessageObjectType;
+} Ccp_MessageObjectType;
 
-typedef struct tagCCP_StationIDType {
+typedef struct tagCcp_StationIDType {
     uint16_t len;
     const uint8_t name[];
-} CCP_StationIDType;
+} Ccp_StationIDType;
+
+
+/*
+** Global Functions.
+*/
+void Ccp_Init(void);
+void Ccp_DispatchCommand(Ccp_MessageObjectType const * cmoIn);
+Ccp_ConnectionStateType Ccp_GetConnectionState(void);
+
 
 #include "ccp_config.h"
 

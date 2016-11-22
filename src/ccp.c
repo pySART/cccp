@@ -1,26 +1,54 @@
+/*
+ * pySART - Simplified AUTOSAR-Toolkit for Python.
+ *
+ * (C) 2007-2016 by Christoph Schueler <github.com/Christoph2,
+ *                                      cpu12.gems@googlemail.com>
+ *
+ * All Rights Reserved
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * s. FLOSS-EXCEPTION.txt
+ */
 
 #include "ccp.h"
 
-
-static CCP_ConnectionStateType CCP_ConnectionState = CCP_DISCONNECTED;
-static uint32_t CCP_Mta;    /* Memory transfer address. */
-
-
-static const CCP_StationIDType CCP_StationID = { sizeof(CCP_STATION_ID), CCP_STATION_ID };
+static Ccp_ConnectionStateType Ccp_ConnectionState = CCP_DISCONNECTED;
+static uint32_t Ccp_Mta;    /* Memory transfer address. */
 
 
-void CCP_Init(void)
+static const Ccp_StationIDType Ccp_StationID = { sizeof(CCP_STATION_ID), CCP_STATION_ID };
+
+
+void Ccp_Init(void)
 {
-    CCP_ConnectionState = CCP_DISCONNECTED;
-    CCP_Mta = 0x00000000UL;
+    Ccp_ConnectionState = CCP_DISCONNECTED;
+    Ccp_Mta = 0x00000000UL;
+}
+
+Ccp_ConnectionStateType Ccp_GetConnectionState(void)
+{
+    return Ccp_ConnectionState;
 }
 
 
-void CCP_dispatchCommand(CCP_MessageObjectType const * cmoIn)
+void Ccp_DispatchCommand(Ccp_MessageObjectType const * cmoIn)
 {
     /* Handle un-connected commands. */
 
-    if (CCP_ConnectionState == CCP_CONNECTED) {
+    if (Ccp_ConnectionState == CCP_CONNECTED) {
 
     }
     /*
@@ -46,7 +74,7 @@ void CCP_dispatchCommand(CCP_MessageObjectType const * cmoIn)
 
 int main(void)
 {
-    printf("%s [%u]\n", CCP_StationID.name, CCP_StationID.len);
+    printf("%s [%u]\n", Ccp_StationID.name, Ccp_StationID.len);
 
     return 0;
 }
