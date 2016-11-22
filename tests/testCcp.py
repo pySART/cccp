@@ -6,7 +6,7 @@ import unittest
 
 from common import  BaseTest
 #from msg import Messaging
-from ccp import Ccp
+from ccp_wrapper import Ccp
 
 class TestUtlStringFunctions(BaseTest):
 
