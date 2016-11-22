@@ -38,12 +38,6 @@ void Ccp_Init(void)
     Ccp_Mta = 0x00000000UL;
 }
 
-Ccp_ConnectionStateType Ccp_GetConnectionState(void)
-{
-    return Ccp_ConnectionState;
-}
-
-
 void Ccp_DispatchCommand(Ccp_MessageObjectType const * cmoIn)
 {
     /* Handle un-connected commands. */
@@ -68,14 +62,21 @@ void Ccp_DispatchCommand(Ccp_MessageObjectType const * cmoIn)
 }
 
 
-#include <stdio.h>
-#include <stdlib.h>
-
-
-int main(void)
+/*
+**
+** Global Helper Functions.
+**
+** Note:  These functions are only useful for unit-testing and stuff like that.
+**
+*/
+Ccp_ConnectionStateType Ccp_GetConnectionState(void)
 {
-    printf("%s [%u]\n", Ccp_StationID.name, Ccp_StationID.len);
-
-    return 0;
+    return Ccp_ConnectionState;
 }
+
+uint32_t Ccp_GetMta(void)
+{
+    return Ccp_Mta;
+}
+
 

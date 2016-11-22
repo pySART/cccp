@@ -100,17 +100,17 @@ typedef enum tagCcp_DTOType {
     COMMAND_RETURN_MESSAGE  = 255
 } Ccp_DTOType;
 
-typedef enum tagCcp_ConnectionStateType { /* ConnectionState */
+typedef enum tagCcp_ConnectionStateType {
     CCP_DISCONNECTED = 0,
     CCP_CONNECTED = 0
 } Ccp_ConnectionStateType;
 
 
-typedef enum {
+typedef enum tagCcp_SlaveAccessType {
     PGM = 0x40,
     DAQ = 0x02,
     CAL = 0x01
-};
+} Ccp_SlaveAccessType;
 
 typedef struct tagCcp_MessageObjectType {
     uint32_t canID;
@@ -129,8 +129,9 @@ typedef struct tagCcp_StationIDType {
 */
 void Ccp_Init(void);
 void Ccp_DispatchCommand(Ccp_MessageObjectType const * cmoIn);
-Ccp_ConnectionStateType Ccp_GetConnectionState(void);
 
+Ccp_ConnectionStateType Ccp_GetConnectionState(void);
+uint32_t Ccp_GetMta(void);
 
 #include "ccp_config.h"
 
