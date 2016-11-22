@@ -3,11 +3,7 @@ vpath %.c ../src
 #OBJDIR=.
 PROGRAMS = ccp 
 
-SRC = knx_messaging.c knx_utl.c knx_et.c
-OBJ = $(SRC:%.c=%.o)
-	
-
-ccp_SRC = ccp.c
+ccp_SRC = ccp.c main.c
 ccp_OBJS = $(ccp_SRC:%.c=%.o)
 
 
@@ -34,7 +30,7 @@ endif
 INCLUDE= -I . -I ../inc
 CPPFLAGS += $(INCLUDE)
 CFLAGS += -g -fPIC #TODO: conditional: -fprofile-arcs -ftest-coverage --coverage
-LDFLAGS= -shared -fPIC -Wl,-Map=ccp.map
+LDFLAGS= -shared -fPIC #-Wl,-Map=ccp.map
 
 
 all: $(PROGRAMS)
