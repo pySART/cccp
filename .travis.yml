@@ -12,7 +12,7 @@ script:
   # - sudo python setup.py install
   # - sudo pip install -v  
   - sudo pip install https://github.com/pySART/pyccp/archive/master.tar.gz
-  - cd ..
+  #- cd ..
   - ls
   - cd ./tests
   - make
