@@ -36,7 +36,7 @@ class Ccp(FFI):
 
     _functions_ = (
         ("Ccp_GetConnectionState", c_uint16, []),
-        ("Ccp_DispatchCommand", POINTER(Ccp_MessageObjectType), []),
+        ("Ccp_DispatchCommand", None, [POINTER(Ccp_MessageObjectType)]),
         ("Ccp_Init", None, []),
         ("Ccp_GetMta", c_uint32, []),
         ("Ccp_SetSendCallout", None, [SEND_FUNC]),
@@ -63,12 +63,19 @@ class Ccp(FFI):
 
 class LocalTransport(object):
 
-    def __init__(self):
+    def __init__(self, dll):
         self.parent = None
+        self.dll = dll
 
     def send(self, canID, b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0, b7 = 0):
         self.message = ccp.CANMessageObject(canID, 8, bytearray((b0, b1, b2, b3, b4, b5, b6, b7)))
-        print("[LocalTransport] Sending: {}".format(self.message))
+#        print("[LocalTransport] Sending: {}".format(self.message))
+        cmo = Ccp_MessageObjectType()
+        cmo.canID = canID
+        cmo.dlc = 8
+        cmo.data = [b0, b1, b2, b3, b4, b5, b6, b7]
+        #print(cmo.canID, cmo.dlc, cmo.data)
+        self.dll.dispatchCommand(cmo)
 
     def receive(self, canID, b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0, b7 = 0):
         self.message = ccp.CANMessageObject(canID, 8, bytearray((b0, b1, b2, b3, b4, b5, b6, b7)))
@@ -79,4 +86,16 @@ class LocalTransport(object):
 
     __repr__ = __str__
 
-# Skip MacOSX tests for now.
+
+##
+##from ffi import loadLibrary
+##
+##dll = loadLibrary("ccp")
+##print(dll)
+##
+##ccpDll = Ccp(dll)
+##print(dir(ccpDll))
+##ccpDll.init()
+##print(ccpDll.getMta())
+##
+
