@@ -137,8 +137,10 @@ void Ccp_SendCmo(Ccp_MessageObjectType const * cmoOut);
 
 
 Ccp_ConnectionStateType Ccp_GetConnectionState(void);
-uint32_t Ccp_GetMta(void);
+uint32_t Ccp_GetMta0(void);
+uint32_t Ccp_GetMta1(void);
 void Ccp_SetSendCallout(Ccp_SendCalloutType * callout);
+void Ccp_DumpMessageObject(Ccp_MessageObjectType const * cmo);
 
 #include "ccp_config.h"
 
