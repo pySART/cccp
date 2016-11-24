@@ -25,6 +25,7 @@
 
 #include "ccp.h"
 
+#include <memory.h>
 #include <stdio.h>
 
 static Ccp_ConnectionStateType Ccp_ConnectionState = CCP_DISCONNECTED;
@@ -84,7 +85,7 @@ void Ccp_DispatchCommand(Ccp_MessageObjectType const * cmoIn)
     Ccp_MessageObjectType cmoOut = {0};
     uint16_t stationAddress;
 
-    printf("CTO: ");
+    printf("Req: ");
     Ccp_DumpMessageObject(cmoIn);
 
     if (Ccp_ConnectionState == CCP_CONNECTED) {
@@ -106,6 +107,7 @@ void Ccp_DispatchCommand(Ccp_MessageObjectType const * cmoIn)
                 Ccp_Mta0 = (uint32_t)&Ccp_StationID.name;
                 break;
             case SET_MTA:
+                printf("SetMTA\n");
                 if (DATA_IN(2) == 0) {
                     Ccp_Mta0 = (DATA_IN(4) << 24) | (DATA_IN(5) << 16) | (DATA_IN(6) << 8) | DATA_IN(7);
                 } else if (DATA_IN(2) == 1) {
@@ -120,9 +122,8 @@ void Ccp_DispatchCommand(Ccp_MessageObjectType const * cmoIn)
                 Ccp_SendCmo(&cmoOut);
                 break;
             case DNLOAD:
-                Ccp_Mta0 += DATA_IN(2)
-
-                /* TODO: Callout for actual download handling --DATA_IN(3 .. 7). */
+                printf("Download\n");
+                memcpy(&Ccp_Mta0, &DATA_IN(3), DATA_IN(2));
 
                 Ccp_AcknowledgedCRM(
                     COUNTER_IN,
