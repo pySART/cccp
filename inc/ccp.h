@@ -125,6 +125,22 @@ typedef struct tagCcp_StationIDType {
     const uint8_t name[];
 } Ccp_StationIDType;
 
+typedef struct tagCcp_ODTEntryType {
+    uint32_t address;
+    uint8_t addressExtension;   /* optional */
+    uint32_t length;    /* optional */
+} Ccp_ODTEntryType;
+
+typedef struct tagCcp_ODTType {
+    /* NOTE: ODT sampling needs to be consistent, ie. atomic. */
+    Ccp_ODTEntryType element[7];
+
+} Ccp_ODTType;
+
+typedef struct tagCcp_DAQListType {
+
+} Ccp_DAQListype;
+
 
 typedef void(*Ccp_SendCalloutType)(Ccp_MessageObjectType const * cmoOut);
 
@@ -141,6 +157,14 @@ uint32_t Ccp_GetMta0(void);
 uint32_t Ccp_GetMta1(void);
 void Ccp_SetSendCallout(Ccp_SendCalloutType * callout);
 void Ccp_DumpMessageObject(Ccp_MessageObjectType const * cmo);
+
+#if !defined(TRUE)
+#define TRUE    (1)
+#endif
+
+#if !defined(FALSE)
+#define FALSE   (0)
+#endif
 
 #include "ccp_config.h"
 
