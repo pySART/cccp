@@ -35,7 +35,7 @@ int main(void)
     Ccp_Connect();
     Ccp_GetCcpVersion();
     //
-    printf("&buffer => %p\n", buffer);
+    printf("&buffer => %p\n", buffer);printf("&buffer => %p\n", buffer);
     Ccp_SetMta((uint32_t)&buffer);
 
     return 0;

@@ -27,8 +27,11 @@
 
 #include <memory.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 static Ccp_ConnectionStateType Ccp_ConnectionState = CCP_DISCONNECTED;
+void Ccp_WriteMemory(void * dest, void * src, uint16_t count);
+void Ccp_ReadMemory(void * dest, void * src, uint16_t count);
 
 /*
 Memory transfer addresses:
@@ -39,8 +42,12 @@ Memory transfer addresses:
 static uint32_t Ccp_Mta0, Ccp_Mta1;
 static uint8_t Ccp_MtaExtension;
 
-static const Ccp_StationIDType Ccp_StationID = { sizeof(CCP_STATION_ID), CCP_STATION_ID };
 static Ccp_SendCalloutType Ccp_SendCallout = NULL;
+static const Ccp_StationIDType Ccp_StationID = { sizeof(CCP_STATION_ID), CCP_STATION_ID };
+
+#if defined(CCP_SIMULATOR)
+static uint8_t Ccp_SimulatedMemory[CCP_SIMULATED_MEMORY_SIZE];
+#endif
 
 #define CCP_COMMAND     (cmoIn->data[0])
 
@@ -56,6 +63,9 @@ void Ccp_Init(void)
     Ccp_ConnectionState = CCP_DISCONNECTED;
     Ccp_Mta0 = Ccp_Mta1 = 0x000000000L;
     Ccp_MtaExtension = 0x00;
+#if defined(CCP_SIMULATOR)
+    memcpy(&Ccp_SimulatedMemory, &Ccp_StationID.name, Ccp_StationID.len);
+#endif
 }
 
 void Ccp_SetDTOValues(Ccp_MessageObjectType * cmoOut, uint8_t type, uint8_t returnCode,
@@ -73,7 +83,19 @@ void Ccp_SetDTOValues(Ccp_MessageObjectType * cmoOut, uint8_t type, uint8_t retu
     DATA_OUT(7) = b4;
 }
 
-#define Ccp_AcknowledgedCRM(ctr, b0, b1, b2, b3, b4) Ccp_SetDTOValues(&cmoOut, COMMAND_RETURN_MESSAGE, ACKNOWLEDGE,ctr, b0, b1, b2, b3, b4)
+
+void Ccp_SetUploadDTO(Ccp_MessageObjectType * cmoOut, uint8_t type, uint8_t returnCode, uint8_t counter)
+{
+    cmoOut->canID = CCP_MASTER_CANID;
+    cmoOut->dlc = 8;
+    DATA_OUT(0) = type;
+    DATA_OUT(1) = returnCode;
+    DATA_OUT(2) = counter;
+    /* Payload already set. */
+}
+
+#define Ccp_AcknowledgedCRM(ctr, b0, b1, b2, b3, b4)    Ccp_SetDTOValues(&cmoOut, COMMAND_RETURN_MESSAGE, ACKNOWLEDGE, ctr, b0, b1, b2, b3, b4)
+#define Ccp_AcknowledgedUploadCRM(ctr)                  Ccp_SetUploadDTO(&cmoOut, COMMAND_RETURN_MESSAGE, ACKNOWLEDGE, ctr)
 
 /**
  * Entry point, needs to be "wired" to CAN-Rx interrupt.
@@ -123,8 +145,8 @@ void Ccp_DispatchCommand(Ccp_MessageObjectType const * cmoIn)
                 break;
             case DNLOAD:
                 printf("Download\n");
-                memcpy(&Ccp_Mta0, &DATA_IN(3), DATA_IN(2));
-
+                Ccp_WriteMemory(&Ccp_Mta0, &DATA_IN(3), DATA_IN(2));
+                Ccp_Mta0 += DATA_IN(2);
                 Ccp_AcknowledgedCRM(
                     COUNTER_IN,
                     Ccp_MtaExtension,
@@ -134,6 +156,12 @@ void Ccp_DispatchCommand(Ccp_MessageObjectType const * cmoIn)
                     Ccp_Mta0 & 0xff
                 );
                 Ccp_SendCmo(&cmoOut);
+            case UPLOAD:
+                printf("Upload\n");
+                //Ccp_ReadMemory(&Ccp_Mta0, &DATA_OUT(3), DATA_IN(2));
+                Ccp_Mta0 += DATA_IN(2);
+                Ccp_AcknowledgedUploadCRM(COUNTER_IN);
+                break;
         }
     } else {
         /*
@@ -215,3 +243,12 @@ void Ccp_DumpMessageObject(Ccp_MessageObjectType const * cmo)
     );
 }
 
+void Ccp_WriteMemory(void * dest, void * src, uint16_t count)
+{
+#if defined(CCP_SIMULATOR)
+    ptrdiff_t  diff;
+    printf("Dest: %p -- SimMem: %p\n", dest, &Ccp_SimulatedMemory);
+#else
+    memcpy(dest, src, count);
+#endif
+}
