@@ -28,6 +28,7 @@
 #include <memory.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stddef.h>
 
 static Ccp_ConnectionStateType Ccp_ConnectionState = CCP_DISCONNECTED;
 void Ccp_WriteMemory(void * dest, void * src, uint16_t count);
